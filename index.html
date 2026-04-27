@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Un fetch</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Barlow:wght@400;700&family=Funnel+Display:wght@600&display=swap");
+
+            *,
+            *::before,
+            *::after {
+                /* el * hace que aplique a todo*/
+                box-sizing: border-box; /*hace que el ancho de una caja sea el ancho, no se suman*/
+                margin: 0;
+                padding: 0;
+            }
+
+            :root {
+                /* puedes hacer definiciones como si fueran variables, usar cuando no estas decidido de algo*/
+                --fondo: #aac4b2;
+                --figura: #0a8129ff;
+                --destaque: #342f46;
+                --textos1: "Funnel Display", sans-serif;
+                --textos2: "Barlow", sans-serif;
+            }
+            body {
+                font-family: var(--textos2);
+                color: var(--figura);
+                background: var(--fondo);
+            }
+            h1 {
+                font-family: var(--textos1);
+                text-align: center;
+                font-size: calc(
+                    1rem * 2vw + 2vh
+                ); /*a un rem se le suma 2 unidades del ancho del viewport y 2 unidades del alto del navegados; OJO CON LOS ESPACIOS*/
+                margin: 2vw auto; /*el margen vertiacl depende del ancho de la pantalla, esto es porque se ve mejor cuando varia el ancho*/
+                line-height: 3vw auto;
+            }
+            #escondido {
+                display: none;
+            }
+            div.contenedor {
+                width: calc(100%-6%);
+                max-width: 700px;
+                margin: 5% auto;
+                padding: 3%;
+                background: #fff;
+                border-radius: 3px;
+            }
+
+            ul {
+                /* la coma es para que se aplique en esos dos elemetnos*/
+                list-style-position: inside;
+                list-style: none;
+                width: 100%;
+                margin: 1rem 0;
+                border-top: 3px solid var(--fondo);
+            }
+            ul li {
+                border-bottom: 1px solid var(--fondo); /* líneas de abajo de cada elemento de la lista*/
+                padding: 0.6rem 0;
+            }
+            ul li:last-child {
+                border-bottom: 3px solid var(--fondo);
+            }
+            ul li a {
+                margin-right: 2%;
+                text-decoration: none;
+                color: var(--destaque);
+                transition: all ease 1s;
+            }
+            ul li a:hover {
+                letter-spacing: 0.05rem;
+                transition: all ease 0.8s;
+            }
+
+            ul li a:nth-child(1) {
+                display: inline-block;
+                width: 50%; /* el espacio de los nombres se vuelve un bloque dentro de una linea que ocupa el 50% del ancho total*/
+            }
+            ul li a[target="_blank"] {
+                /* tomar un elemento segun el atributo que tenga el elemento, en este caso es el svg de los iconos*/
+                margin-left: 1rem;
+            }
+
+            figure {
+                width: 80%;
+                margin: 10% auto;
+            }
+            figure svg use[href="#bien"] {
+                animation: nombre 2s infinite alternate;
+            }
+            figure svg use[href="#mal"] {
+                animation: nombre 2s infinite alternate;
+            }
+
+            @keyframes nombre {
+                0% {
+                    fill: #00a;
+                    transform: rotate(359deg);
+                    transform-origin: center;
+                }
+                100% {
+                    fill: #a00;
+                    transform-origin: center;
+                }
+            }
+            /* Móvil: se muestra #first, se oculta #second */
+            #first {
+                display: block;
+            }
+
+            #second {
+                display: none;
+            }
+
+            /* Pantallas desde 600px: se oculta #first, se muestra #second */
+            @media screen and (min-width: 600px) {
+                #first {
+                    display: none;
+                }
+
+                #second {
+                    display: block;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" id="escondido">
+            <symbol id="bien" width="16" height="16" viewBox="0 0 16 16">
+                <g>
+                    <path
+                        d="M12.354 4.354a.5.5 0 0 0-.708-.708L5 10.293 1.854 7.146a.5.5 0 1 0-.708.708l3.5 3.5a.5.5 0 0 0 .708 0zm-4.208 7-.896-.897.707-.707.543.543 6.646-6.647a.5.5 0 0 1 .708.708l-7 7a.5.5 0 0 1-.708 0" />
+                    <path d="m5.354 7.146.896.897-.707.707-.897-.896a.5.5 0 1 1 .708-.708" />
+                </g>
+            </symbol>
+            <symbol id="mal" width="16" height="16" viewBox="0 0 16 16">
+                <g>
+                    <path
+                        d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z" />
+                    <path
+                        d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z" />
+                </g>
+            </symbol>
+        </svg>
+        <div class="contenedor">
+            <h1>Hola mundo :3</h1>
+            <ul id="estudiantes"></ul>
+            <figure id="first">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 32">
+                    <g>
+                        <use href="#bien" fill="#00aa19" />
+                        <use href="#mal" fill="#a00" x="16" />
+                    </g>
+                </svg>
+            </figure>
+            <figure id="second">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 16">
+                    <g>
+                        <use href="#bien" fill="#00aa19" />
+                        <use href="#mal" fill="#a00" x="16" />
+                    </g>
+                </svg>
+            </figure>
+        </div>
+        <script>
+            fetch("https://raw.githubusercontent.com/profesorfaco/opr/refs/heads/main/clase-07/registros.json") //https://raw.githubusercontent.com/profesorfaco/opr/refs/heads/main/clase-07/registros.json
+                .then((respuesta) => {
+                    if (!respuesta.ok) {
+                        throw new Error("Error HTTP: " + respuesta.status);
+                    }
+                    return respuesta.json();
+                })
+                .then((datos) => {
+                    var trabajo = datos;
+                    console.log("Datos recibidos:", datos);
+                    const donde = document.getElementById("estudiantes");
+                    //repita
+                    trabajo.forEach((x) => {
+                        var cuantos = [];
+                        if (x.uno != "") {
+                            cuantos.push(x.uno);
+                        }
+                        if (x.dos != "") {
+                            cuantos.push(x.dos);
+                        }
+                        if (x.tres != "") {
+                            cuantos.push(x.tres);
+                        }
+                        if (x.cuatro != "") {
+                            cuantos.push(x.cuatro);
+                        }
+                        if (x.seis != "") {
+                            cuantos.push(x.seis);
+                        }
+                        if (x.siete != "") {
+                            cuantos.push(x.siete);
+                        }
+                        donde.innerHTML += `<li><a href="${x.cuenta}">${x.nombre}</a> ${pelotitas(cuantos)}</li>`;
+                    });
+                    function pelotitas(n) {
+                        var armado = "";
+                        n.forEach((e) => {
+                            if (e[1]) {
+                                armado += `<a href="${e[0]}" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+                                    <use href="#bien" fill="#00aa19"/>
+                                </svg>
+                            </a>`;
+                            } else {
+                                armado += `<a href="${e[0]}" target="_blank">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16"><use href="#mal" fill="#a00"/></svg></a>`;
+                            }
+                        });
+                        return armado;
+                    }
+                })
+                .catch((error) => {
+                    console.error("Algo salió mal:", error);
+                });
+        </script>
+    </body>
+</html>
